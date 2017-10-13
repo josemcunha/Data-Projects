@@ -1,0 +1,40 @@
+# Loading needed libraries
+
+library(readr)
+
+# Uploading the files from Looker to RStudio
+
+Signups_Page_Visits <- read_csv("~/Downloads/Signups_Page_Visits.csv")
+Non_Signups_Page_Visits <- read_csv("~/Downloads/Non_Signups_Page_Visits.csv")
+
+# Renaming columns
+
+names(Non_Signups_Page_Visits)[1] = "title"
+names(Signups_Page_Visits)[1] = "title"
+names(Non_Signups_Page_Visits)[2] = "pageview_count_signups"
+names(Non_Signups_Page_Visits)[2] = "pageview_count_nonsignups"
+
+# Joining the 2 datasets in to one by the title
+
+signups_nonsignups = merge(Non_Signups_Page_Visits, Signups_Page_Visits[ ,c("title","pageview_count_signups")], by = "title")
+
+# Doing the ratio of pagevews across both Signups and Non Signups data
+
+signups_nonsignups$pageview_count_nonsignups_ratio = (signups_nonsignups$pageview_count_nonsignups/sum(signups_nonsignups$pageview_count_nonsignups))*100
+signups_nonsignups$pageview_count_signups_ratio = (signups_nonsignups$pageview_count_signups/sum(signups_nonsignups$pageview_count_signups))*100
+
+# Calculating the difference between the 2 ratios cohorts
+
+signups_nonsignups$difference = signups_nonsignups$pageview_count_signups_ratio - signups_nonsignups$pageview_count_nonsignups_ratio
+
+# Creating a new dataset
+
+data=data.frame(title=signups_nonsignups$title, ratio_difference=signups_nonsignups$difference)
+
+# Order the column ratio_difference in Descendent mode
+
+data = data[order(-data$ratio_difference), ]
+
+# Selecting the top 20 pages
+
+data[1:20, ]
