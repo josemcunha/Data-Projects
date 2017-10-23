@@ -1,0 +1,25 @@
+# Loading libraries
+library(readr)
+library(ggplot2)
+
+# Loading data frames
+Signups <- read_csv("~/Downloads/pusher2.0 account 2017-10-23T1138.csv")
+Activations <- read_csv("~/Downloads/pusher2.0 account 2017-10-23T1221.csv")
+
+# Rename Columns
+names(Signups)[1] = "Months"
+names(Signups)[2] = "Account_Created"
+names(Activations)[1] = "Months"
+names(Activations)[2] = "Accounts_Active"
+
+# Merge Datasets
+Signups_Activations = merge(Signups, Activations[ ,c("Months","Accounts_Active")], by = "Months")
+
+# Adding the Activation Rate
+Signups_Activations$Activation_Rate = (Signups_Activations$Accounts_Active/Signups_Activations$Account_Created)*100
+
+# Dataset just for the Activation Rate
+Active_Rate=data.frame(Months=Signups_Activations$Months, Activation_Rate=Signups_Activations$Activation_Rate)
+
+# Adding graph to visualize Activation Rate
+ggplot(data=Active_Rate, aes(x=Months,y=Activation_Rate)) + geom_bar(stat = "identity")
