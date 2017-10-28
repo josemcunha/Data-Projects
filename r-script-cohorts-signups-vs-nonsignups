@@ -9,7 +9,7 @@ Non_Signups_Page_Visits <- read_csv("~/Downloads/Non_Signups_Page_Visits.csv")
 
 # Renaming columns
 
-names(Non_Signups_Page_Visits)[1] = "title"
+names(Signups_Page_Visits)[1] = "title"
 names(Signups_Page_Visits)[1] = "title"
 names(Non_Signups_Page_Visits)[2] = "pageview_count_signups"
 names(Non_Signups_Page_Visits)[2] = "pageview_count_nonsignups"
